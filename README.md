@@ -1,224 +1,187 @@
-# OpenShift OCP-PRD NGINX Load Balancer
+# NGINX Load Balancer for OpenShift OCP-PRD
 
-This repository contains scripts and configuration files for deploying NGINX as a load balancer for the OpenShift OCP-PRD cluster.
+**Status:** ✅ DEPLOYED AND OPERATIONAL  
+**Version:** 1.1.0  
+**Server:** uswix864  
+**Date:** July 9, 2025
 
-## 🎯 Quick Start
+## 🎉 Deployment Complete!
 
-### 1. Clone this repository to your deployment server
-```bash
-git clone https://github.com/your-username/ocp-prd-nginx-lb.git
-cd ocp-prd-nginx-lb
+This repository contains the NGINX load balancer configuration for the OpenShift OCP-PRD cluster. The deployment has been **successfully completed** and is currently operational on server uswix864.
+
+### 🏆 What's Deployed:
+- **NGINX Load Balancer** replacing HAProxy
+- **SSL Termination** for secure connections
+- **Multi-node Load Balancing** across 8 OpenShift nodes
+- **Health Monitoring** endpoints
+- **Production-ready Configuration**
+
+## 🌐 Current Configuration
+
+### **Load Balancer Endpoints:**
+- **API Server:** `https://api.ocp-prd.kohlerco.com:6443` → Master nodes
+- **HTTP Applications:** `http://*.apps.ocp-prd.kohlerco.com:80` → Worker + Infra nodes
+- **HTTPS Applications:** `https://*.apps.ocp-prd.kohlerco.com:443` → Worker + Infra nodes
+- **Health Check:** `http://uswix864:8080/ping` → Load balancer status
+- **Statistics:** `http://uswix864:8080/nginx-status` → NGINX metrics
+
+### **OpenShift Nodes:**
+```
+Master Nodes (API Load Balancing):
+├── ocp-prd-jmq98-master-0 → 10.20.136.15
+├── ocp-prd-jmq98-master-1 → 10.20.136.25
+└── ocp-prd-jmq98-master-2 → 10.20.136.16
+
+Worker Nodes (Application Load Balancing):
+├── ocp-prd-jmq98-worker-0-pk46v → 10.20.136.63
+├── ocp-prd-jmq98-worker-0-vrx59 → 10.20.136.64
+└── ocp-prd-jmq98-worker-0-zj7kv → 10.20.136.62
+
+Infrastructure Nodes (Application Load Balancing):
+├── ocp-prd-jmq98-infra-odf-0-qshwc → 10.20.136.67
+├── ocp-prd-jmq98-infra-odf-0-vw296 → 10.20.136.66
+└── ocp-prd-jmq98-infra-odf-0-zzl92 → 10.20.136.65
 ```
 
-### 2. Deploy to uswix864 (from your local machine)
-```bash
-# Automated deployment
-./deploy-to-uswix864.sh deploy
+## 📁 Repository Files
 
-# Or using PowerShell
-.\deploy-to-uswix864.ps1 -Action deploy
-```
-
-### 3. Complete setup on uswix864
-```bash
-# Connect to server
-ssh root@uswix864
-cd /opt/ocp-nginx-lb
-
-# Authenticate to OpenShift
-oc login https://api.ocp-prd.kohlerco.com:6443
-
-# Run node discovery
-./discover-ocp-nodes.sh
-
-# Deploy NGINX
-./deploy-nginx-lb.sh install
-```
-
-## 📁 Repository Structure
+This clean, production-ready repository contains:
 
 ```
+├── deploy-nginx-lb.sh                 # Main deployment and management script
 ├── discover-ocp-nodes.sh              # Node discovery script (Linux/Unix)
 ├── discover-ocp-nodes.ps1             # Node discovery script (Windows)
-├── deploy-nginx-lb.sh                 # NGINX deployment script
-├── deploy-to-uswix864.sh              # Automated deployment to uswix864
-├── deploy-to-uswix864.ps1             # PowerShell deployment script
 ├── nginx-ocp-prd-lb.conf              # Complete NGINX configuration
 ├── DEPLOY-USWIX864.md                 # Detailed deployment guide
-├── DEPLOYMENT-SUMMARY.md              # Quick deployment summary
+├── DEPLOYMENT-SUCCESS.md              # Deployment completion summary
 ├── QUICK-SETUP.md                     # Quick reference guide
-└── README-nginx-lb.md                 # Complete documentation
+├── README.md                          # This documentation
+└── VERSION                            # Version tracking
 ```
 
-## 🔧 What This Does
+## 🔧 Management Commands
 
-- **Discovers OpenShift Nodes**: Automatically finds master and worker nodes
-- **Generates NGINX Configuration**: Creates upstream configurations for load balancing
-- **Deploys Load Balancer**: Sets up NGINX to load balance OpenShift traffic
-- **Manages SSL Certificates**: Handles certificates for API and application traffic
-- **Provides Monitoring**: Includes health checks and monitoring endpoints
-
-## 🌐 Architecture
-
-### Load Balancer Flow
-- **API Traffic**: Client → NGINX (uswix864:6443) → Master Nodes (port 6443)
-- **HTTP Apps**: Client → NGINX (uswix864:80) → Worker Nodes (port 80)
-- **HTTPS Apps**: Client → NGINX (uswix864:443) → Worker Nodes (port 443)
-
-### OpenShift Cluster Details
-- **Cluster**: ocp-prd.kohlerco.com
-- **API VIP**: 10.20.136.49
-- **Ingress VIP**: 10.20.136.50
-- **Network**: 10.20.136.0/24
-
-## 🚀 Usage Examples
-
-### Deploy from Local Machine
+### **On uswix864 server:**
 ```bash
-# Check connectivity
-./deploy-to-uswix864.sh check
+# Check status
+./deploy-nginx-lb.sh status
 
-# Deploy everything
-./deploy-to-uswix864.sh deploy
+# Restart NGINX
+./deploy-nginx-lb.sh restart
 
-# Transfer files only
-./deploy-to-uswix864.sh transfer
+# Reload configuration
+./deploy-nginx-lb.sh reload
+
+# Stop/Start services
+./deploy-nginx-lb.sh stop
+./deploy-nginx-lb.sh start
 ```
 
-### On Target Server (uswix864)
+### **Node Discovery (if needed):**
 ```bash
-# Node discovery
+# Rediscover OpenShift nodes
 ./discover-ocp-nodes.sh
 
-# NGINX operations
-./deploy-nginx-lb.sh install
-./deploy-nginx-lb.sh start
-./deploy-nginx-lb.sh status
-./deploy-nginx-lb.sh reload
+# Check generated upstream configuration
+cat /etc/nginx/conf.d/ocp-prd-nginx-upstream.conf
 ```
 
-## 📋 Prerequisites
+## 🔍 Health Monitoring
 
-### Local Machine
-- SSH access to uswix864
-- Git for cloning this repository
-
-### Target Server (uswix864)
-- RHEL/CentOS with yum package manager
-- Root/sudo access
-- Network connectivity to OpenShift nodes (10.20.136.0/24)
-- OpenShift CLI (oc) installed
-- NGINX installed
-
-### OpenShift Cluster
-- Valid authentication credentials
-- Access to API server (api.ocp-prd.kohlerco.com:6443)
-- Node discovery permissions
-
-## 🔒 SSL Certificates
-
-You'll need SSL certificates for:
-- **API Server**: api.ocp-prd.kohlerco.com
-- **Applications**: *.apps.ocp-prd.kohlerco.com (wildcard)
-
-Place certificates in `/etc/nginx/ssl/` on uswix864:
-```
-/etc/nginx/ssl/ocp-prd-api.crt
-/etc/nginx/ssl/ocp-prd-api.key
-/etc/nginx/ssl/wildcard-apps-ocp-prd.crt
-/etc/nginx/ssl/wildcard-apps-ocp-prd.key
-```
-
-## 🔍 Verification
-
-After deployment, test these endpoints:
+### **Health Check Endpoints:**
 ```bash
 # NGINX health
-curl http://uswix864:8080/health
+curl http://uswix864:8080/ping
 
-# API health
-curl -k https://api.ocp-prd.kohlerco.com/healthz
+# NGINX statistics
+curl http://uswix864:8080/nginx-status
 
-# Application access
-curl -k https://console-openshift-console.apps.ocp-prd.kohlerco.com
+# OpenShift API health
+curl -k https://localhost:6443/healthz
 ```
 
-## 📊 Generated Files
+### **Log Monitoring:**
+```bash
+# Watch access logs
+tail -f /var/log/nginx/access.log
 
-The scripts generate:
-- `ocp-prd-inventory.json` - Complete node inventory
-- `ocp-prd-nginx-upstream.conf` - NGINX upstream configuration
-- `ocp-prd-nodes.txt` - Simple node list
+# Watch error logs
+tail -f /var/log/nginx/error.log
+
+# Check for errors
+grep -i error /var/log/nginx/error.log
+```
+
+## 🔒 SSL Configuration
+
+Current SSL setup:
+- **API Certificate:** `/etc/nginx/ssl/ocp-prd-api.crt` (self-signed)
+- **Apps Certificate:** `/etc/nginx/ssl/wildcard-apps-ocp-prd.crt` (self-signed)
+
+### **To Replace with Production Certificates:**
+```bash
+# Replace API certificate
+sudo cp your-api-cert.crt /etc/nginx/ssl/ocp-prd-api.crt
+sudo cp your-api-cert.key /etc/nginx/ssl/ocp-prd-api.key
+
+# Replace apps certificate
+sudo cp your-wildcard-cert.crt /etc/nginx/ssl/wildcard-apps-ocp-prd.crt
+sudo cp your-wildcard-cert.key /etc/nginx/ssl/wildcard-apps-ocp-prd.key
+
+# Set proper permissions
+sudo chmod 644 /etc/nginx/ssl/*.crt
+sudo chmod 600 /etc/nginx/ssl/*.key
+
+# Reload NGINX
+sudo ./deploy-nginx-lb.sh reload
+```
 
 ## 🛠️ Troubleshooting
 
-### Common Issues
-- **SSH connection failed**: Set up SSH key authentication
-- **NGINX won't start**: Check configuration with `nginx -t`
-- **502 Bad Gateway**: Verify OpenShift node connectivity
-- **SSL errors**: Check certificate paths and permissions
-
-### Debug Commands
+### **Common Commands:**
 ```bash
-# Check logs
-tail -f /var/log/nginx/error.log
-
-# Test configuration
+# Test NGINX configuration
 nginx -t
 
-# Check connectivity
-./discover-ocp-nodes.sh
+# Check what's listening on ports
+netstat -tlnp | grep nginx
 
-# Check firewall
-firewall-cmd --list-ports
+# Check NGINX processes
+ps aux | grep nginx
+
+# Restart if needed
+systemctl restart nginx
 ```
 
-## 📈 Monitoring
+### **Configuration Files:**
+- **Main Config:** `/etc/nginx/nginx.conf`
+- **Upstream Config:** `/etc/nginx/conf.d/ocp-prd-nginx-upstream.conf`
+- **SSL Certificates:** `/etc/nginx/ssl/`
 
-### Health Endpoints
-- `http://uswix864:8080/health` - NGINX health
-- `http://uswix864:8080/nginx-status` - NGINX statistics
-- `https://api.ocp-prd.kohlerco.com/healthz` - API health
+## 📊 Deployment History
 
-### Automated Maintenance
-Set up cron job for node discovery updates:
-```bash
-# Update every 6 hours
-0 */6 * * * /opt/ocp-nginx-lb/discover-ocp-nodes.sh && /opt/ocp-nginx-lb/deploy-nginx-lb.sh reload
-```
-
-## 📚 Documentation
-
-- **README-nginx-lb.md** - Complete documentation
-- **DEPLOY-USWIX864.md** - Detailed deployment guide
-- **DEPLOYMENT-SUMMARY.md** - Quick deployment summary
-- **QUICK-SETUP.md** - Quick reference guide
-
-## 🤝 Contributing
-
-When updating this repository:
-1. Test all scripts on a development environment first
-2. Update documentation if functionality changes
-3. Follow the existing code style and structure
-4. Ensure all scripts are executable
-
-## 📞 Support
-
-For deployment issues:
-1. Check the troubleshooting section
-2. Review NGINX and OpenShift logs
-3. Verify network connectivity
-4. Test SSL certificate validity
+- **v1.0.0:** Initial repository setup and scripts
+- **v1.1.0:** ✅ **DEPLOYED** - NGINX load balancer operational on uswix864
 
 ## 🔄 Updates
 
-To update the deployment:
-1. Pull latest changes: `git pull origin main`
-2. Run node discovery: `./discover-ocp-nodes.sh`
-3. Reload NGINX: `./deploy-nginx-lb.sh reload`
+To update the configuration:
+1. Pull latest changes from this repository
+2. Run node discovery if nodes have changed
+3. Reload NGINX configuration
+4. Verify health endpoints
+
+## 📞 Support
+
+For issues or questions:
+1. Check the health monitoring endpoints
+2. Review NGINX logs
+3. Verify OpenShift node connectivity
+4. Ensure SSL certificates are valid
 
 ---
 
-**Environment**: OpenShift OCP-PRD (ocp-prd.kohlerco.com)  
-**Load Balancer**: uswix864  
-**Maintained by**: Kohler Co Infrastructure Team
+**Environment:** OpenShift OCP-PRD (ocp-prd.kohlerco.com)  
+**Load Balancer:** uswix864  
+**Repository:** https://github.com/rich-p-ai/nginx.git  
+**Status:** ✅ PRODUCTION READY
