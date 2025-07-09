@@ -3,7 +3,7 @@
 
 param(
     [string]$TargetServer = "uswix864",
-    [string]$TargetUser = "root",
+    [string]$TargetUser = "KOCETV6",
     [string]$WorkingDir = "/opt/ocp-nginx-lb",
     [string]$Action = "deploy"
 )

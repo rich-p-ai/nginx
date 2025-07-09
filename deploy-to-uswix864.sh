@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Configuration
 TARGET_SERVER="uswix864"
-TARGET_USER="root"
+TARGET_USER="KOCETV6"
 WORKING_DIR="/opt/ocp-nginx-lb"
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
