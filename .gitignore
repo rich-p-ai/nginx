@@ -1,0 +1,66 @@
+# Generated files
+ocp-prd-inventory.json
+ocp-prd-nginx-upstream.conf
+ocp-prd-nodes.txt
+temp_nodes.json
+master_nodes.json
+worker_nodes.json
+
+# SSL certificates and keys
+*.crt
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Backup files
+nginx-backup-*
+*.bak
+*.backup
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local configuration files
+local-config.sh
+local-config.ps1
+.env
+.env.local
+
+# Connection scripts (may contain sensitive info)
+connect-*.sh
+
+# NGINX test files
+nginx-test-*
+
+# Compressed files
+*.zip
+*.tar.gz
+*.tgz
+*.tar.bz2
+
+# Generated documentation
+*.pdf
+*.docx
